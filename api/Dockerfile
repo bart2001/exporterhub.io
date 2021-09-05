@@ -8,6 +8,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		netcat \
 	&& rm -rf /var/lib/apt/lists/*
 
+RUN apt update && apt-get install -y vim
+
 ## OS command for create a directory
 RUN mkdir /data
 

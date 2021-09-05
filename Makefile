@@ -13,7 +13,7 @@ build-fe:
 	sudo docker build -t nexclipper/exporterhub:${front_tag} ./ --no-cache
 	sudo docker tag nexclipper/exporterhub:${front_tag} nexclipper/exporterhub:${docker_version}
 build-be:
-	cd api && sudo docker build -t nexclipper/exporterhub-api:${api_tag} ./ --no-cache && cd ..
+	cd api && sudo docker build -t nexclipper/exporterhub-api:${api_tag} ./ && cd ..
 	sudo docker tag nexclipper/exporterhub-api:${api_tag} nexclipper/exporterhub-api:${docker_version}
 build: build-fe build-be
 run: set

@@ -70,7 +70,7 @@ def create_or_update_exporters():
         logger.info('CHECK_EXPORTERS_START')
         headers       = {'Authorization' : 'token ' + TOKEN}
         exporters     = Exporter.objects.select_related('category', 'official').prefetch_related('release_set').order_by('id')
-        exporter_list_file = open('exporter_list.csv', 'r', encoding='utf-8') 
+        exporter_list_file = open('exporter_list.csv', 'r', encoding='utf-8')
         repo_infos         = csv.reader(exporter_list_file)
 
         next(repo_infos, None)
@@ -138,7 +138,7 @@ def create_or_update_exporters():
                         ).save()
 
                     logger.info(f'id: {exporter.id} name: {exporter.name} | SUCCESSFULLY_ADDED_REPOSITORY_AND_RELEASES | {datetime.now()}')
-                
+
                 # update exporter
                 else:
                     exporter = exporters.get(repository_url=repo_url)
@@ -153,7 +153,7 @@ def create_or_update_exporters():
                         exporter.app_name    = app_name.replace(' ','-')
                         exporter.save()
                         logger.info(f'id: {exporter.id} name: {exporter.name} | SUCCESSFULLY_UPDATED_REPOSITORY_INFO | {datetime.now()}')
-                
+
                     releases = sorted(release_data, key=lambda x: x["created_at"])
 
                     if exporter.release_set.filter().exists():
@@ -186,14 +186,15 @@ def listener(event):
     if not event.exception:
         if scheduler.get_job('check_token'):
             job = scheduler.get_job('check_token')
-       
+
             if job.func() == 'VALID_TOKEN':
                 scheduler.remove_job('check_token')
                 logger.info('Remove check_token job.')
 
                 scheduler.add_job(
                     create_or_update_exporters,
-                    trigger            = CronTrigger(hour='*/4'),
+                    #trigger            = CronTrigger(hour='*/4'),
+                    trigger            = CronTrigger(minute='*'),
                     id                 = 'create_or_update_exporters',
                     max_instances      = 1,
                     replace_existing   = True,
@@ -202,7 +203,6 @@ def listener(event):
                     next_run_time      = datetime.now()
                 )
                 logger.info("Added job 'create_or_update_exporters'.")
-                
 
 class Command(BaseCommand):
     def handle(self,*args, **options):
@@ -217,7 +217,7 @@ class Command(BaseCommand):
             next_run_time    = datetime.now()
         )
         logger.info("Added job 'check_token'")
-        
+
         scheduler.add_job(
             delete_old_job_executions,
             trigger            = CronTrigger(day_of_week="mon", hour="00", minute="00"),
