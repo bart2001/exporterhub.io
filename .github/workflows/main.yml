@@ -1,21 +1,7 @@
-# test
-name: Manually triggered workflow
-on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        required: true
-        default: 'Mona the Octocat'
-      home:
-        description: 'location'
-        required: false
-        default: 'The Octoverse'
-
+name: GitHub Actions Demo
+on: [push]
 jobs:
-  say_hello:
+  Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Hello ${{ github.event.inputs.name }}!"
-          echo "- in ${{ github.event.inputs.home }}!"
+      - run: echo $default-branch
