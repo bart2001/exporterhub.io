@@ -28,14 +28,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Build & Push Docker Image (FrontEnd)
+        if : ${{ startsWith(steps.tag.outputs.tag, 'fe') && env.DOCKERHUB_FRONTEND_REPO }}
+        run: |
+          echo "build front-end"
+
+      - name: Build & Push Docker Image (BackEnd)
+        if : ${{ startsWith(steps.tag.outputs.tag, 'api') && env.DOCKERHUB_BACKEND_REPO }}
+        run: |
+          echo "build back-end"
+
 #      - name: Build & Push Docker Image (FrontEnd)
-#        if : ${{ startsWith(env.RELEASE_VERSION, 'fe') }}
+#        if : ${{ startsWith(steps.tag.outputs.tag, 'fe') }}
 #        run: |
 #          docker build -t bart2001/exporterhub:release-${{ env.RELEASE_VERSION }} ./ --no-cache
 #          docker push bart2001/exporterhub:release-${{ env.RELEASE_VERSION }}
 #
 #      - name: Build & Push Docker Image (BackEnd)
-#        if : ${{ startsWith(env.RELEASE_VERSION, 'api') }}
+#        if : ${{ startsWith(steps.tag.outputs.tag, 'api') }}
 #        run: |
 #          cd api
 #          docker build -t bart2001/exporterhub-api:release-${{ env.RELEASE_VERSION }} ./ --no-cache
