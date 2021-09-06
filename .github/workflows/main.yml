@@ -29,7 +29,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & Push Docker Image (FrontEnd)
-        if : ${{ startsWith(steps.tag.outputs.tag, 'fe') && secrets.DOCKERHUB_FRONTEND_REPO }}
+        if : ${{ startsWith(steps.tag.outputs.tag, 'fe') }}
         run: |
           docker build -t ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:release-${{ steps.tag.outputs.tag }} ./ --no-cache
           docker tag ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:release-${{ steps.tag.outputs.tag }} ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:latest
@@ -37,7 +37,7 @@ jobs:
           docker push ${{ secrets.DOCKERHUB_FRONTEND_REPO }}:latest
 
       - name: Build & Push Docker Image (BackEnd)
-        if : ${{ startsWith(steps.tag.outputs.tag, 'api') && env.DOCKERHUB_BACKEND_REPO }}
+        if : ${{ startsWith(steps.tag.outputs.tag, 'api') }}
         run: |
           cd api
           docker build -t ${{ secrets.DOCKERHUB_BACKEND_REPO }}:release-${{ steps.tag.outputs.tag }} ./ --no-cache
